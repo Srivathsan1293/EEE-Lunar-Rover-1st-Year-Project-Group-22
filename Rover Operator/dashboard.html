@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rover dashboard</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #0f0f0f; color: #eee; }
+    .sensors { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 20px; }
+    .card { background: #1e1e1e; border-radius: 10px; padding: 16px; text-align: center; }
+    .card .val { font-size: 2rem; font-weight: 500; color: #4ade80; }
+    .card .lbl { font-size: 0.8rem; color: #888; margin-top: 4px; }
+    .card .val.text { font-size: 1.2rem; color: #60a5fa; }
+    #status { font-size: 12px; color: #888; text-align: center; }
+    .log { background: #1e1e1e; border-radius: 10px; padding: 16px; margin-top: 20px; }
+    .log h3 { margin: 0 0 10px; font-size: 0.85rem; color: #888; font-weight: 400; }
+    .log-list { list-style: none; margin: 0; padding: 0; max-height: 180px; overflow-y: auto; }
+    .log-list li { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #2a2a2a; font-size: 0.85rem; }
+    .log-list li:last-child { border-bottom: none; }
+    .log-list .rock { color: #60a5fa; }
+    .log-list .time { color: #555; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+
+<div class="sensors">
+  <div class="card"><div class="val" id="s1">--</div><div class="lbl">Infrared</div></div>
+  <div class="card"><div class="val" id="s2">--</div><div class="lbl">Magnetic</div></div>
+  <div class="card"><div class="val" id="s3">--</div><div class="lbl">Ultrasound</div></div>
+  <div class="card"><div class="val" id="s4">--</div><div class="lbl">Age</div></div>
+  <div class="card"><div class="val text" id="rock">--</div><div class="lbl">Rock type</div></div>
+</div>
+
+<div class="log">
+  <h3>Rock type log</h3>
+  <ul class="log-list" id="rock-log"></ul>
+</div>
+
+<div id="status">Connecting...</div>
+
+<script>
+let ws;
+
+function addLog(rock) {
+  const list = document.getElementById('rock-log');
+  const time = new Date().toLocaleTimeString();
+  const li = document.createElement('li');
+  li.innerHTML = `<span class="rock">${rock}</span><span class="time">${time}</span>`;
+  list.prepend(li);
+  if (list.children.length > 50) list.lastChild.remove();
+}
+let logCooldown = false; 
+function connect() {
+  ws = new WebSocket('ws://localhost:8765');
+  ws.onopen  = () => document.getElementById('status').textContent = 'Connected';
+  ws.onclose = () => { document.getElementById('status').textContent = 'Reconnecting...'; setTimeout(connect, 2000); }
+  ws.onmessage = (e) => {
+    const data = JSON.parse(e.data);
+    document.getElementById('s1').textContent = parseFloat(data['s1']).toFixed(2);
+    document.getElementById('s2').textContent = parseFloat(data['s2']).toFixed(2);
+    document.getElementById('s3').textContent = parseFloat(data['s3']).toFixed(2);
+    document.getElementById('s4').textContent = parseFloat(data['s4']).toFixed(2);
+
+    if (data['rock']) {
+        document.getElementById('rock').textContent = data['rock'];
+        if (data['log']) addLog(data['rock']);  // only log when button A pressed
+    }
+};
+}
+
+connect();
+</script>
+</body>
+</html>
