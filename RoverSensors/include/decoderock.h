@@ -1,6 +1,8 @@
 #ifndef ROCK
 #define ROCK
 
-String decodeRock(String message);
+#include <ArduinoJson.h>
+
+String decodeRock(JsonDocument& message);
 
 #endif

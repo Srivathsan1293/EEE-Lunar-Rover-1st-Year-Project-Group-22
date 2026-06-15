@@ -5,8 +5,11 @@
 #include<mqtt.h>
 #include<decoderock.h>
 #include<radio.h>
+#include<ArduinoJson.h>
+const int numSensors = 2;
+const int sensors[numSensors] = {A0, A1};
 
-
+StaticJsonDocument<200> message;
 String pulseRate = "";
 
 volatile unsigned long pulseCount = 0;
@@ -19,7 +22,9 @@ void pulseISR() {
 }
 
 void setup() {
-  Serial.begin(115200);
+  Serial1.begin(600);
+  Serial.begin(9600);
+  pinMode(8,INPUT);
   pinMode(pulsePin, INPUT_PULLUP);
   attachInterrupt(
     digitalPinToInterrupt(pulsePin),
@@ -35,9 +40,6 @@ void loop() {
   }
   client_loop();
 
-  String Ultrasound = readUltrasound();
-  String age = getAge();
-  String magnet = getMagnet();
 
   unsigned long now = millis();
 
@@ -48,14 +50,16 @@ void loop() {
     interrupts();
     float frequencyHz = count * (1000.0 / reportInterval);
     pulseRate = String(frequencyHz);
-    Serial.println(pulseRate);
     lastReport = now;
-
+    message["s3"] = readUltrasound();
+    message["s1"] = pulseRate;
+    message["s4"] = getAge();
+    message["s2"] = getMagnet(sensors, numSensors, 435,445);
+    
+    message["rock"] = decodeRock(message);
+    SendtoRoverOperator(message);
   }
   
-  String message =  Ultrasound + "///" + age + "///" + pulseRate + "///" + magnet;
-  String rock = decodeRock(message);
-  message = message + "///" + rock;
-  SendtoRoverOperator(message);
+  
 
 }

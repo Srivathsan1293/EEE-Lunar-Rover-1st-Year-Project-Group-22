@@ -3,8 +3,8 @@
 #include "connect_to_wifi.h"
 
 
-char ssid[] = "EEERover";     //  your network SSID (name)
-char pass[] = "exhibition";  // your network password
+char ssid[] = "Sarthak's iPhone";     //  your network SSID (name)
+char pass[] = "Sarthak4627";  // your network password
 int status = WL_IDLE_STATUS;     // the Wifi radio's status
 
 void connectWIFI() {

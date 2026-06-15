@@ -5,7 +5,7 @@ def on_message(client, userdata, msg):
 
 def on_connect(client, userdata, flags, rc):
     print("Connected")
-    client.subscribe("senspr_read")  # or "#" for all topics
+    client.subscribe("sensor_read")  # or "#" for all topics
 
 client = mqtt.Client()
 client.on_connect = on_connect

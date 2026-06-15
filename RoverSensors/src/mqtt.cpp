@@ -1,7 +1,8 @@
-#include<PubSubClient.h>
+#include <PubSubClient.h>
 #include "mqtt.h"
 #include <WiFi101.h>
-#include<vector>
+#include <vector>
+#include <ArduinoJson.h>
 
 const char* broker = "192.168.0.142";
 const int brokerPort = 1883;
@@ -32,8 +33,8 @@ void client_loop(){
     client.loop();
 }
 
-void SendtoRoverOperator(String message){
-    char payloadbuf[200];
-    message.toCharArray(payloadbuf, sizeof(payloadbuf));
-    client.publish("sensor_read",payloadbuf);
+void SendtoRoverOperator(JsonDocument& message) {
+    char payload[200];
+    serializeJson(message, payload, sizeof(payload));
+    client.publish("sensor_read", payload);
 }
