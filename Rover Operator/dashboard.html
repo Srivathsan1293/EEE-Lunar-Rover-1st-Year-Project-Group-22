@@ -39,11 +39,11 @@
 <script>
 let ws;
 
-function addLog(rock) {
+function addLog(rock, age) {
   const list = document.getElementById('rock-log');
   const time = new Date().toLocaleTimeString();
   const li = document.createElement('li');
-  li.innerHTML = `<span class="rock">${rock}</span><span class="time">${time}</span>`;
+  li.innerHTML = `<span class="rock">${rock}</span><span class="s4">${age}</span>`;
   list.prepend(li);
   if (list.children.length > 50) list.lastChild.remove();
 }
@@ -54,14 +54,14 @@ function connect() {
   ws.onclose = () => { document.getElementById('status').textContent = 'Reconnecting...'; setTimeout(connect, 2000); }
   ws.onmessage = (e) => {
     const data = JSON.parse(e.data);
-    document.getElementById('s1').textContent = parseFloat(data['s1']).toFixed(2);
-    document.getElementById('s2').textContent = parseFloat(data['s2']).toFixed(2);
-    document.getElementById('s3').textContent = parseFloat(data['s3']).toFixed(2);
-    document.getElementById('s4').textContent = parseFloat(data['s4']).toFixed(2);
+    document.getElementById('s1').textContent = data['s1'];
+    document.getElementById('s2').textContent = data['s2'];
+    document.getElementById('s3').textContent = data['s3'];
+    document.getElementById('s4').textContent = data['s4'];
 
     if (data['rock']) {
         document.getElementById('rock').textContent = data['rock'];
-        if (data['log']) addLog(data['rock']);  // only log when button A pressed
+        if (data['log'] && data['rock'] != "Not Found") addLog(data['rock'], data['s4']);  // only log when button A pressed
     }
 };
 }

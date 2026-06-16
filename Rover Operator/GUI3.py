@@ -94,6 +94,6 @@ async def main():
 mqtt_client = mqtt.Client()
 mqtt_client.on_message = on_mqtt_message
 mqtt_client.connect("localhost", 1883)
-mqtt_client.subscribe("rover/sensors")
+mqtt_client.subscribe("sensor_read")
 
 asyncio.run(main())

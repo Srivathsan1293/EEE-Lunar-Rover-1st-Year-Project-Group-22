@@ -3,7 +3,7 @@
 #include <WiFi101.h>
 #include<vector>
 #include "movement.h"
-const char* broker = "192.168.0.142";
+const char* broker = "192.168.137.1";
 const int brokerPort = 1883;
 
 WiFiClient wificlient;
@@ -15,6 +15,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     for(int i = 0; i < length; i++){
         new_payload += (char)payload[i];
     }
+    // Serial.println(new_payload);
     move(new_payload);
 }
 
@@ -23,7 +24,9 @@ void connectMQTT(){
     client.setCallback(callback);
     while(!client.connected()){
         if(client.connect("Laptop")){
+            Serial.println("connected");
             client.subscribe("movement_controls");
+            Serial.println("Subscribed");
         }
     }
 }

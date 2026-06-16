@@ -10,7 +10,7 @@ import pygame
 import time
 
 DEADZONE   = 0.08
-TURN_SCALE = 0.7
+TURN_SCALE = 1
 
 # Set these to the axis indices for your controller
 FORWARD_AXIS = 1   # left stick Y
@@ -40,9 +40,7 @@ while True:
     L = {"direction": 0 if left  >= 0 else 1, "speed": int(abs(left)  * 255)}
     R = {"direction": 0 if right >= 0 else 1, "speed": int(abs(right) * 255)}
 
-    message = str(R['direction']) + str(L['direction']) + str(R['speed']) + str(L['speed'])
-    if int(message) == 0  :
-        message = '00000000'
+    message = str(R['direction']) + str(L['direction']) + str(R['speed']).zfill(3) + str(L['speed']).zfill(3)
 
 
     if prev_L['direction'] != L['direction'] or prev_R['direction'] != R['direction'] or abs((prev_L['speed'] - L['speed'])/(1+L['speed'])) > 0.1 or abs((prev_R['speed'] - R['speed'])/(1+R['speed'])) > 0.1 or (int(message) == 0 and int(prev_message)!=0):

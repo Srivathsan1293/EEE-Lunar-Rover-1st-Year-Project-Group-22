@@ -31,11 +31,8 @@ String getMagnet(const int sensorPins[], int num_sensors, int up_threshold, int 
 
   // Determine final value
   if (reading[index] < up_threshold) {
-   
-    Serial.println("Up");
-     return "Up";
+    return "Up";
   } else if (reading[index] > down_threshold) {
-     Serial.println("d");
      return "Down";
   } else {
     return "No Magnet";

@@ -6,7 +6,8 @@
 
 void setup(){
   initialize_movement();
-
+  Serial.begin(9600);
+  connectWIFI();
 }
 
 void loop(){

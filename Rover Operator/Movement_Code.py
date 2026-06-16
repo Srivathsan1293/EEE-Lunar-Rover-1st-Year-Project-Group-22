@@ -13,13 +13,13 @@ while True:
     client.loop_start()
     if keyboard.is_pressed('w'):
         if msg != "w":
-            client.publish('movement_controls',"11255255")
+            client.publish('movement_controls',"00255255")
             msg = "w"
         print('w')
     elif keyboard.is_pressed('s'):
         if msg != "s":
             msg = "s"
-            client.publish('movement_controls','00255255')
+            client.publish('movement_controls','11255255')
         print('s')
     elif keyboard.is_pressed('d'):
         if msg != "d":

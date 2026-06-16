@@ -9,7 +9,6 @@ client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 client.connect(host = 'localhost', port = 1883)
 
 while True:
-    client.publish("rover/sensors",json.dumps({ "s1": 23.451, "s2": "1", "s3": 0.734, "s4": 12.100,"rock" : "Basaltoid" }))
+    client.publish("sensor_read",json.dumps({ "s1": "hi", "s2": "1", "s3": "hi", "s4": "hi","rock" : "Basaltoid" }))
     time.sleep(1)
-    client.publish("rover/sensors",json.dumps({ "s1": 3543, "s2": "0", "s3": 0.345, "s4": 1.100,"rock" : "Regolix" }))
-    time.sleep(1)
+
